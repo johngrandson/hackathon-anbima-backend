@@ -5,9 +5,9 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
+      "route": "investment-profile/{id}",
       "methods": [
-        "get",
-        "post"
+        "put"
       ]
     },
     {

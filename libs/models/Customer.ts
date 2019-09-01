@@ -1,13 +1,12 @@
 import { subYears } from 'date-fns';
 import { ObjectId } from 'mongodb';
-import { arrayProp as ArrayProperty, ModelType, prop as Property, Typegoose } from 'typegoose';
-import { cnpjValidator, countryCodeValidator, cpfValidator, emailValidator } from '../shared/mongooseValidators';
+import { staticMethod as StaticMethod, ModelType, prop as Property, Typegoose, arrayProp as ArrayProperty } from 'typegoose';
+import { cnpjValidator, cpfValidator, emailValidator } from '../shared/mongooseValidators';
 import { InvestmentProfile } from './InvestmentProfile';
+import { Question } from './Question';
 
 type CustomerType = 'person' | 'company';
 type CustomerGender = 'male' | 'female' | 'other';
-type PersonalBankAccountType = 'checking' | 'sallary' | 'saving';
-
 
 export const CustomerTypeEnum = {
   COMPANY: 'company',
@@ -56,12 +55,6 @@ export class Email {
     }]
   })
   public address: string;
-
-  @Property({ required: true })
-  public isMainEmail: boolean;
-
-  @Property({ required: true, default: false })
-  public isVerified: boolean;
 }
 
 // export class RG {
@@ -82,14 +75,14 @@ export class PersonalInfo {
 //   @Property({ required: true })
 //   public rg: RG;
 
-  @Property({
-    required: true,
-    validate: {
-      message: 'O cliente deve ter pelo menos 18 anos',
-      validator: (value: Date) => value <= subYears(new Date(), 18)
-    }
-  })
-  public birthDate: Date;
+  // @Property({
+  //   required: true,
+  //   validate: {
+  //     message: 'O cliente deve ter pelo menos 18 anos',
+  //     validator: (value: Date) => value <= subYears(new Date(), 18)
+  //   }
+  // })
+  // public birthDate: Date;
 
   @Property({ required: true, validate: cpfValidator, unique: true, sparse: true })
   public cpf: string;
@@ -136,18 +129,27 @@ export class CompanyInfo {
  */
 export class ContactInfo {
   @Property({ required: true })
-  public emails: Email;
+  public email: Email;
 }
 
 export class Customer extends Typegoose {
-  // tslint:disable-next-line: variable-name
+  @StaticMethod
+  public static async calculatePoints(this: ModelType<InvestmentProfile> & typeof Customer, customer: Customer) {
+    return customer.questions.reduce((prev, next) => {
+      return next.point + prev;
+    }, 0);
+  }
+
   public _id: string | ObjectId;
 
-  @Property({ required: true })
+  @Property()
   public contactInfo: ContactInfo;
 
   @Property()
   public investmentProfile: InvestmentProfile;
+
+  @ArrayProperty({ items: Question })
+  public questions: Question[];
 
   @Property({ required() { return this.type === 'person'; } })
   public personalInfo?: PersonalInfo;

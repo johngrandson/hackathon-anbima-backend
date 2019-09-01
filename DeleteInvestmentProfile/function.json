@@ -5,7 +5,7 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "route": "customer/{id}",
+      "route": "investment-profile/{id}",
       "methods": [
         "delete"
       ]
@@ -16,5 +16,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/DeleteCustomer/index.js"
+  "scriptFile": "../dist/DeleteInvestmentProfile/index.js"
 }

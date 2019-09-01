@@ -5,9 +5,9 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
+      "route": "customer/{id}",
       "methods": [
-        "get",
-        "post"
+        "delete"
       ]
     },
     {
@@ -16,5 +16,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/UpdateCustomer/index.js"
+  "scriptFile": "../dist/DeleteCustomer/index.js"
 }

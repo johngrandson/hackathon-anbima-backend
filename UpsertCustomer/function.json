@@ -5,9 +5,10 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
+      "route": "customer",
       "methods": [
-        "get",
-        "post"
+        "post",
+        "put"
       ]
     },
     {
@@ -16,5 +17,5 @@
       "name": "res"
     }
   ],
-  "scriptFile": "../dist/CreateCustomer/index.js"
+  "scriptFile": "../dist/UpsertCustomer/index.js"
 }
